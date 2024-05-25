@@ -13,7 +13,7 @@ export default function PlaceList({placeList}) {
     navigator.navigate('place-detail',{place:item}); 
   }
   return (
-    <View>
+    <View>  
       <Text
       style={{fontSize:20,fontFamily:'raleway-bold',marginTop:10}}
       >Found {placeList.length} Places</Text>
