@@ -29,7 +29,7 @@ export default function Home() {
     })
   } 
   return (
-    <ScrollView style={{padding:20,backgroundColor:'#fff',flex:1}}>
+    <ScrollView style={{padding:20,backgroundColor:'#FFFAFA',flex:1}}>
         <Header/>
         <GoogleMapView placeList={placeList} />
         <CategoryList setSelectedCategory={(value)=>GetNearBySearchPlace(value)}/>

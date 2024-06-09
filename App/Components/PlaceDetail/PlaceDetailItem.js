@@ -10,7 +10,7 @@ import Share from '../../Services/Share';
 export default function PlaceDetailItem({place,onDirectionClick}) {  
   return (
     <View>
-       <Text style={{ fontSize: 26, fontFamily: "raleway-bold" }}>
+       <Text style={{ fontSize: 26}}>
         {place.name}
       </Text>
       <View
@@ -33,7 +33,7 @@ export default function PlaceDetailItem({place,onDirectionClick}) {
               "?maxwidth=400" +
               "&photo_reference=" +
               place?.photos[0]?.photo_reference +
-              "&key=AIzaSyAlIDUiTW6M9p6qb7mHsMCvqk0_OMO3MV0",
+              "&key=AIzaSyDC3NRr4e6IFPo97pNjt8EofMtVaMhnUBM",
           }}
           style={{
             width: "100%",
@@ -52,7 +52,7 @@ export default function PlaceDetailItem({place,onDirectionClick}) {
         {place.vicinity?place.vicinity:place.formatted_address}
       </Text>
       {place?.opening_hours ? (
-        <Text style={{ fontFamily: "raleway" }}>
+        <Text style={{  }}>
           {place?.opening_hours?.open_now == true ? 
           "(Open)" : 
           "(Closed)"}
@@ -75,7 +75,7 @@ export default function PlaceDetailItem({place,onDirectionClick}) {
           }}
         >
           <Ionicons name="navigate-circle-outline" size={24} color="black" />
-          <Text style={{ fontFamily: "raleway", fontSize: 16 }}>Direction</Text>
+          <Text style={{ fontSize: 16 }}>Direction</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>Share.SharePlace(place)}
           style={{
@@ -91,7 +91,7 @@ export default function PlaceDetailItem({place,onDirectionClick}) {
           }}
         >
          <Ionicons name="md-share-outline" size={24} color="black" />
-          <Text style={{ fontFamily: "raleway", fontSize: 16 }}>Share</Text>
+          <Text style={{ fontSize: 16 }}>Share</Text>
         </TouchableOpacity>
         </View>
 

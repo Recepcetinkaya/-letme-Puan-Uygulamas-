@@ -1,98 +1,169 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { Alert, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { FIREBASE_APP } from '../../firebaseConfig';
 
-export default function App() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
+const logo = require("../../assets/logo.png");
 
-  const handleSignIn = async () => {
-    try {
-      const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAlIDUiTW6M9p6qb7mHsMCvqk0_OMO3MV0', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          returnSecureToken: true,
-        }),
-      });
+const LoginScreen = ({ navigation }) => {
+    const [click, setClick] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error.message);
-      }
+    const auth = getAuth(FIREBASE_APP);
 
-      const userData = await response.json();
-      setUser(userData);
-      setError(null);
-    } catch (error) {
-      console.error('Sign in error:', error);
-      setError(error.message);
-    }
-  };
+    const handleLogin = async () => {
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            navigation.navigate('TabNavigation');
+        } catch (error) {
+            console.error('Oturum açma başarısız:', error);
+            alert('Giriş başarısız oldu. Lütfen e-posta ve şifrenizi kontrol edin.');
+        }
+    };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Firebase Doğrulama</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button
-        title="Sign In"
-        onPress={handleSignIn}
-      />
-      {error && (
-        <Text style={styles.error}>{error}</Text>
-      )}
-      {user && (
-        <Text style={styles.userInfo}>
-          Giriş: {user.email}
-        </Text>
-      )}
-    </View>
-  );
-}
+    const handleNavigateToRegister = () => {
+        navigation.navigate('Register');
+    };
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <Image source={logo} style={styles.image} resizeMode='contain' />
+            <Text style={styles.title}>Login</Text>
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.input}
+                    placeholder='EMAIL OR USERNAME'
+                    placeholderTextColor="#fff" // Set placeholder text color to white
+                    value={email}
+                    onChangeText={setEmail}
+                    autoCorrect={false}
+                    autoCapitalize='none'
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder='PASSWORD'
+                    placeholderTextColor="#fff" // Set placeholder text color to white
+                    secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
+                    autoCorrect={false}
+                    autoCapitalize='none'
+                />
+            </View>
+            <View style={styles.rememberView}>
+                <View style={styles.switch}>
+                    <Switch value={click} onValueChange={setClick} trackColor={{ true: "green", false: "gray" }} />
+                    <Text style={styles.rememberText}>Remember Me</Text>
+                </View>
+                <View>
+                    <Pressable onPress={() => Alert.alert("Forget Password!")}>
+                        <Text style={styles.forgetText}>Forgot Password?</Text>
+                    </Pressable>
+                </View>
+            </View>
+            <View style={styles.buttonView}>
+                <Pressable style={styles.button} onPress={handleLogin}>
+                    <Text style={styles.buttonText}>LOGIN</Text>
+                </Pressable>
+                <Text style={styles.optionsText}>OR LOGIN WITH</Text>
+            </View>
+
+            <Text style={styles.footerText}>
+                Don't Have Account?<Text style={styles.signup} onPress={handleNavigateToRegister}>  Sign Up</Text>
+            </Text>
+        </SafeAreaView>
+    );
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  error: {
-    color: 'red',
-    marginBottom: 10,
-  },
-  userInfo: {
-    marginTop: 20,
-  },
+    container: {
+        alignItems: "center",
+        paddingTop: 70,
+        backgroundColor: '#333', // Dark gray background
+        flex: 1, // Ensures the background color covers the whole screen
+    },
+    image: {
+        height: 160,
+        width: 170
+    },
+    title: {
+        fontSize: 30,
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        textAlign: "center",
+        paddingVertical: 40,
+        color: "red"
+    },
+    inputView: {
+        gap: 15,
+        width: "100%",
+        paddingHorizontal: 40,
+        marginBottom: 5
+    },
+    input: {
+        height: 50,
+        paddingHorizontal: 20,
+        borderColor: "red",
+        borderWidth: 1,
+        borderRadius: 7,
+        color: '#fff', // Text color to white for better readability
+    },
+    rememberView: {
+        width: "100%",
+        paddingHorizontal: 50,
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexDirection: "row",
+        marginBottom: 8
+    },
+    switch: {
+        flexDirection: "row",
+        gap: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    rememberText: {
+        fontSize: 13,
+        color: '#fff', // Text color to white for better readability
+    },
+    forgetText: {
+        fontSize: 11,
+        color: "red"
+    },
+    button: {
+        backgroundColor: "#6a0dad", // Purple background for the button
+        height: 45,
+        borderColor: "gray",
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    buttonText: {
+        color: "white",
+        fontSize: 18,
+        fontWeight: "bold"
+    },
+    buttonView: {
+        width: "100%",
+        paddingHorizontal: 50
+    },
+    optionsText: {
+        textAlign: "center",
+        paddingVertical: 10,
+        color: "gray",
+        fontSize: 13,
+        marginBottom: 6
+    },
+    footerText: {
+        textAlign: "center",
+        color: "gray",
+    },
+    signup: {
+        color: "red",
+        fontSize: 13
+    }
 });
+
+export default LoginScreen;
