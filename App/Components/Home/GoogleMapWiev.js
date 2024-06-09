@@ -26,14 +26,15 @@ export default function GoogleMapView({placeList}) {
   return (
     <View style={{ marginTop: 20 }}>
       <Text style={{ fontSize: 20, 
-        marginBottom: 10, fontWeight: "600",fontFamily:'raleway-bold' }}>
-        Top Near By Places
+        marginBottom: 10, fontWeight: "600"}}>
+        
+       Yakınlardaki En Popüler Yerler
       </Text>
       <View style={{ borderRadius: 20, overflow: "hidden" }}>
     {location?    <MapView
           style={{
-            width: Dimensions.get("screen").width * 0.89,
-            height: Dimensions.get("screen").height * 0.23,
+            width: Dimensions.get("screen").width * 0.95,
+            height: Dimensions.get("screen").height * 0.42,
           }}
           provider={PROVIDER_GOOGLE}
           showsUserLocation={true}
